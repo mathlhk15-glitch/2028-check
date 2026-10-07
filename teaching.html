@@ -149,6 +149,8 @@ section.intro{gap:14px}
 .st.na{background:var(--line);color:var(--fg);border-color:transparent}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 .dcard{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;display:grid;gap:8px;align-content:start;min-width:0}
+.dcard .go{display:block;text-align:center;font-weight:700;font-size:.92rem;padding:10px;border-radius:4px;background:var(--accent);color:var(--bg);text-decoration:none;margin-top:4px}
+.dcard .go:hover,.dcard .go:focus-visible{filter:brightness(1.1);outline:2px solid var(--accent);outline-offset:2px}
 .dcard h3 a{color:var(--fg);text-decoration:none} .dcard h3 a:hover{text-decoration:underline}
 .prog{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
 .prog span{display:block;height:100%;background:var(--fact)}
@@ -158,7 +160,7 @@ section.intro{gap:14px}
 td.nw{white-space:nowrap}
 td.memo{white-space:pre-wrap;font-size:.88rem;min-width:200px}
 .linkrow{display:grid;grid-template-columns:110px 1fr auto;gap:8px;align-items:center;font-size:.88rem;padding:6px 0;border-bottom:1px solid var(--line)}
-.linkrow code{word-break:break-all;font-size:.8rem;color:var(--muted)}
+.linkrow a{word-break:break-all;font-size:.82rem;color:var(--accent)}
 .linkrow button{padding:5px 12px;font-size:.8rem}
 @media (max-width:640px){.linkrow{grid-template-columns:1fr}}
 @media print{.netbar,.writer-box{display:none}}
@@ -166,7 +168,7 @@ td.memo{white-space:pre-wrap;font-size:.88rem;min-width:200px}
 <script src="config.js"></script><script src="data.js"></script></head><body>
 <div id="net" class="netbar" role="status"><span id="netmsg">서버에 연결하는 중…</span></div><div class="wrap">
 <header>
-  <p class="eyebrow">창원경일고 · 2028 대입 대응 점검 · 부서별 점검지 02/06</p>
+  <p class="eyebrow"><a href="./" style="color:var(--accent)">← 전체 현황판</a> · 창원경일고 · 2028 대입 대응 점검 · 부서별 점검지 02/06</p>
   <h1><span class="dept-tag">교수학습지원부</span><br>2028 대입 대응 점검지</h1>
   <p class="lead">전체 점검표 14개 항목 중 업무분장상 <b>교수학습지원부</b> 주관 항목 <b>2개</b>입니다. 체크하고 메모를 쓰면 <b>자동 저장</b>되어 교감 총괄표에 바로 반영됩니다. 따로 회신하지 않으셔도 됩니다.</p>
   <p class="muted" style="font-size:.88rem">책임자: 박경남 부장 · 협조 부서가 적힌 항목은 해당 부서와 확인 후 작성해 주십시오.</p>

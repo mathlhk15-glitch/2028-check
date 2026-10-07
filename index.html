@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>2028 대입 점검 · 교감 총괄표</title>
+<title>2028 대입 점검 · 현황판</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
 <style>/* Layout: 협의회 자료 한 장처럼 읽히는 단일 컬럼 + 마지막에 조작하는 점검표 */
@@ -149,6 +149,8 @@ section.intro{gap:14px}
 .st.na{background:var(--line);color:var(--fg);border-color:transparent}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 .dcard{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;display:grid;gap:8px;align-content:start;min-width:0}
+.dcard .go{display:block;text-align:center;font-weight:700;font-size:.92rem;padding:10px;border-radius:4px;background:var(--accent);color:var(--bg);text-decoration:none;margin-top:4px}
+.dcard .go:hover,.dcard .go:focus-visible{filter:brightness(1.1);outline:2px solid var(--accent);outline-offset:2px}
 .dcard h3 a{color:var(--fg);text-decoration:none} .dcard h3 a:hover{text-decoration:underline}
 .prog{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
 .prog span{display:block;height:100%;background:var(--fact)}
@@ -166,13 +168,13 @@ td.memo{white-space:pre-wrap;font-size:.88rem;min-width:200px}
 <script src="config.js"></script><script src="data.js"></script></head><body>
 <div id="net" class="netbar" role="status"><span id="netmsg">서버에 연결하는 중…</span></div><div class="wrap">
 <header>
-  <p class="eyebrow">창원경일고 · 교감 총괄용 · 2026학년도 업무분장 기준</p>
-  <h1>2028 대입 대응 점검 — 실시간 총괄표</h1>
-  <p class="lead">원본 점검표 <b>14개 항목 전부</b>를 <b>6개 부서</b>가 나눠 맡았습니다. 부서가 점검지에 입력하면 이 화면에 바로 나타납니다.</p>
-  <div class="actions"><button type="button" id="reload">지금 새로고침</button></div>
+  <p class="eyebrow">창원경일고 · 2026학년도 업무분장 기준</p>
+  <h1>2028 대입 대응 점검 — 실시간 현황판</h1>
+  <p class="lead">점검표 <b>14개 항목</b>을 <b>6개 부서</b>가 나눠 맡았습니다. <b>아래에서 우리 부서 카드의 [점검하러 가기]</b>를 눌러 점검지에 들어가 주세요. 입력한 내용은 이 화면에 바로 나타납니다.</p>
+  <div class="actions"><button type="button" class="ghost" id="reload">지금 새로고침</button></div>
 </header>
 <section>
-  <h2>부서별 진행 현황</h2>
+  <h2>우리 부서 점검지로 가기 · 진행 현황</h2>
   <div class="summary" aria-live="polite">
     <div><b id="t-now">0</b><small>이미 운영 중</small></div><div><b id="t-review">0</b><small>적용 검토</small></div>
     <div><b id="t-need">0</b><small>점검 필요</small></div><div><b id="t-none">0</b><small>미응답</small></div>
@@ -197,9 +199,11 @@ td.memo{white-space:pre-wrap;font-size:.88rem;min-width:200px}
   <div id="out">버튼을 누르면 현재 응답 기준으로 문안이 만들어집니다.</div>
 </section>
 <section style="border-bottom:0">
-  <h2>부서에 보낼 주소</h2>
-  <div class="meta"><label>회신 기한 (전달 문구에 들어감)<input id="due" placeholder="예: 10월 16일(금)"></label></div>
-  <div id="links"></div>
+  <h2>전 부서 일괄 전달 문구 (교감용)</h2>
+  <p>이 문구 하나를 6개 부서에 한 번에 보내면 됩니다. 각 부서는 이 화면 맨 위에서 자기 부서 카드를 눌러 들어갑니다.</p>
+  <div class="meta"><label>점검 기한<input id="due" placeholder="예: 10월 16일(금)"></label></div>
+  <div id="msg" style="white-space:pre-wrap;font-size:.88rem;background:var(--surface);border:1px dashed var(--accent);border-radius:6px;padding:14px"></div>
+  <div class="actions"><button type="button" id="copymsg">전달 문구 복사</button></div>
   <p class="muted" style="font-size:.85rem">배정 판단이 들어간 항목: 5번(수업 실행은 교과 몫, 교수학습지원부는 취합), 7번(학교알리미 비교는 명시 담당 없음 → 학력평가부), 12번(과목 선택 상담 명시 담당 없음 → 진로부 주관·교육과정부 협조).</p>
 </section>
 </div>
@@ -221,7 +225,7 @@ async function apiPost(body){
   const r = await fetch(API_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(body)});
   const j = await toJson(r); if(!j.ok) throw new Error(j.error||"저장 실패"); return j;
 }
-document.getElementById('due').addEventListener('input', renderLinks);
+
 let DATA = {}, FILTER = "all";
 const base = location.href.replace(/[^/]*([?#].*)?$/, "");
 function render(){
@@ -231,12 +235,13 @@ function render(){
     const c = {now:0,review:0,need:0,na:0}; let done=0, last="";
     its.forEach(i=>{ const x=DATA[i.id]; if(x&&x.s){ c[x.s]++; done++; } if(x&&x.t>last) last=x.t; });
     const pct = Math.round(done/its.length*100);
-    return `<div class="dcard"><h3><a href="${d.slug}.html" target="_blank" rel="noopener">${d.name}</a></h3>
+    return `<div class="dcard"><h3><a href="${d.slug}.html">${d.name}</a></h3>
       <p class="muted" style="font-size:.85rem">${d.head} · ${its.map(i=>i.no).join("·")}번</p>
       <div class="prog" aria-label="진행률 ${pct}%"><span style="width:${pct}%"></span></div>
       <p style="font-size:.88rem"><b>${done}/${its.length}</b> 응답 ${done===its.length?"✓ 완료":""}</p>
       <div class="chips" style="gap:4px">${STATES.map(([k,l])=>c[k]?`<span class="st ${k}">${l} ${c[k]}</span>`:"").join("")}</div>
-      <p class="muted" style="font-size:.8rem">${last?"마지막 입력 "+last:"아직 입력 없음"}</p></div>`;
+      <p class="muted" style="font-size:.8rem">${last?"마지막 입력 "+last:"아직 입력 없음"}</p>
+      <a class="go" href="${d.slug}.html">점검하러 가기 →</a></div>`;
   }).join("");
   // 전체 집계
   const t = {now:0,review:0,need:0,na:0,none:0};
@@ -266,16 +271,22 @@ document.getElementById("reload").addEventListener("click", refresh);
 setInterval(()=>{ if(!document.hidden) refresh(); }, 30000);
 document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) refresh(); });
 
-// 부서 주소 목록 + 전달 문구
+// 전 부서 일괄 전달 문구
 const due = document.getElementById("due");
-function msgFor(d){
-  return `[2028 대입 대응 점검 요청] ${d.name}\n2028 대입 변화에 맞춰 우리 학교 교육과정–수업–평가–학생부–진학 연계를 부서별로 점검합니다.\n아래 주소에서 작성자 이름을 넣고 항목별 상태와 메모를 입력해 주세요. 입력 즉시 자동 저장되며 따로 회신하실 필요는 없습니다.\n${base}${d.slug}.html\n기한: ${due.value||"○월 ○일"}까지`;
+function renderMsg(){
+  document.getElementById("msg").textContent =
+`[2028 대입 대응 점검 요청]
+2028 대입부터 대학이 석차등급뿐 아니라 성취도(A~E)·과목 선택·세특까지 함께 봅니다.
+우리 학교 교육과정–수업–평가–학생부–진학이 잘 이어지는지 업무분장에 따라 부서별로 점검하고자 합니다.
+
+▶ 아래 주소에 들어가 맨 위 ‘우리 부서’ 카드의 [점검하러 가기]를 눌러 주세요.
+${base}
+
+· 작성자 이름 입력 → 항목별 상태 선택 → 현황 메모 (입력 즉시 자동 저장, 별도 회신 불필요)
+· 대상: 교육과정부, 교수학습지원부, 학력평가부, 교무기획부, 진로부, 3학년부
+· 기한: ${due.value||"○월 ○일"}까지`;
 }
-function renderLinks(){
-  document.getElementById("links").innerHTML = CHECK.depts.map(d=>`<div class="linkrow"><b>${d.name}</b><a href="${d.slug}.html" target="_blank" rel="noopener">${base}${d.slug}.html</a><button type="button" class="ghost" data-s="${d.slug}">전달 문구 복사</button></div>`).join("");
-  document.querySelectorAll("#links button").forEach(bt=>bt.addEventListener("click",()=>copy(msgFor(CHECK.depts.find(d=>d.slug===bt.dataset.s)), bt)));
-}
-renderLinks();
+renderMsg();
 function copy(text, bt){
   const done = ()=>{ const o=bt.textContent; bt.textContent="복사됨"; setTimeout(()=>bt.textContent=o,1500); };
   navigator.clipboard.writeText(text).then(done).catch(()=>{ prompt("아래 내용을 복사하세요", text); });
@@ -297,4 +308,4 @@ document.getElementById("gen").addEventListener("click",()=>{
 });
 document.getElementById("copyout").addEventListener("click",e=>copy(document.getElementById("out").textContent, e.target));
 refresh();
-</script></body></html>
+due.addEventListener('input', renderMsg); document.getElementById('copymsg').addEventListener('click', e=>copy(document.getElementById('msg').textContent, e.target));</script></body></html>
