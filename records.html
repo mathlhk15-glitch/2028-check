@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>2028 대입 점검 · 교무기획부</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>/* Layout: 협의회 자료 한 장처럼 읽히는 단일 컬럼 + 마지막에 조작하는 점검표 */
+:root{
+  --bg:#f5f7fa; --surface:#ffffff; --fg:#1b2533; --muted:#5b6778; --line:#d9dfe8;
+  --accent:#1f4e8c; --accent-soft:#e3ecf8;
+  --fact:#1d7a52; --fact-soft:#e2f3ea;
+  --interp:#9a6a12; --interp-soft:#faf0db;
+  --unver:#a33a3a; --unver-soft:#f8e3e3;
+  --display:"Gowun Batang", "Noto Serif KR", "Apple SD Gothic Neo", serif;
+  --body:"IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#11161e; --surface:#19202b; --fg:#e4e9f1; --muted:#9aa6b8; --line:#2c3644;
+    --accent:#7fa9e6; --accent-soft:#1f2c40;
+    --fact:#6cc79c; --fact-soft:#16302a; --interp:#e0b25e; --interp-soft:#352b18;
+    --unver:#ec8b8b; --unver-soft:#3a1f22; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11161e; --surface:#19202b; --fg:#e4e9f1; --muted:#9aa6b8; --line:#2c3644;
+  --accent:#7fa9e6; --accent-soft:#1f2c40;
+  --fact:#6cc79c; --fact-soft:#16302a; --interp:#e0b25e; --interp-soft:#352b18;
+  --unver:#ec8b8b; --unver-soft:#3a1f22; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:32px 64px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.35;margin:0}
+h1{font-size:clamp(1.6rem,4.5vw,2.3rem)}
+h2{font-size:1.4rem;margin-bottom:12px}
+h3{font-size:1.1rem}
+p{margin:0}
+.eyebrow{font-size:.78rem;letter-spacing:.08em;color:var(--muted);font-weight:500}
+header{display:grid;gap:12px;padding-bottom:24px;border-bottom:2px solid var(--fg)}
+.lead{font-size:1.08rem;color:var(--fg);max-width:65ch}
+.toc{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.9rem}
+.toc a{color:var(--accent);text-decoration:none}
+.toc a:hover,.toc a:focus-visible{text-decoration:underline}
+section{padding-block:36px;border-bottom:1px solid var(--line);display:grid;gap:16px}
+section > p{max-width:68ch}
+.muted{color:var(--muted)}
+.callout{background:var(--accent-soft);border-left:4px solid var(--accent);padding:16px 18px;border-radius:4px;font-weight:500}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tri > div{padding:16px;border-radius:6px;display:grid;gap:6px;align-content:start;min-width:0}
+.t-fact{background:var(--fact-soft)} .t-fact b{color:var(--fact)}
+.t-interp{background:var(--interp-soft)} .t-interp b{color:var(--interp)}
+.t-unver{background:var(--unver-soft)} .t-unver b{color:var(--unver)}
+.tri ul{margin:0;padding-left:18px;font-size:.93rem}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.93rem;min-width:520px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;background:var(--accent-soft);font-size:.85rem}
+tr:last-child td{border-bottom:0}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.tag.fact{background:var(--fact-soft);color:var(--fact)}
+.tag.interp{background:var(--interp-soft);color:var(--interp)}
+.tag.unver{background:var(--unver-soft);color:var(--unver)}
+.bars{display:grid;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px}
+.bar-row{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center}
+.bar-row .lbl{font-size:.88rem;font-weight:500}
+.bar-pair{display:grid;gap:4px}
+.bar{height:16px;border-radius:3px;position:relative;background:var(--line)}
+.bar span{position:absolute;inset:0 auto 0 0;border-radius:3px}
+.bar.y25 span{background:var(--muted)}
+.bar.y26 span{background:var(--accent)}
+.bar i{position:absolute;right:6px;top:-1px;font-style:normal;font-size:.72rem;font-variant-numeric:tabular-nums;color:var(--fg)}
+.legend{display:flex;gap:16px;font-size:.82rem;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend .l25::before{background:var(--muted)} .legend .l26::before{background:var(--accent)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.card ul{margin:0;padding-left:18px;font-size:.93rem}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:700;font-size:.95rem}
+.flow span{background:var(--surface);border:1px solid var(--accent);color:var(--accent);padding:4px 12px;border-radius:99px}
+.flow em{font-style:normal;color:var(--muted)}
+/* 점검표 */
+.summary{display:flex;flex-wrap:wrap;gap:10px}
+.summary div{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-width:120px}
+.summary b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums;font-family:var(--display)}
+.summary small{color:var(--muted);font-size:.8rem}
+.area{display:grid;gap:10px}
+.area-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.area-head .step{font-size:.8rem;font-weight:700;color:var(--accent)}
+.item{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:10px}
+.item[data-s="now"]{border-left-color:var(--fact)}
+.item[data-s="review"]{border-left-color:var(--accent)}
+.item[data-s="need"]{border-left-color:var(--unver)}
+.item[data-s="na"]{opacity:.65}
+.item p.q{font-weight:500}
+.item .why{font-size:.86rem;color:var(--muted)}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts label{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;border:1px solid var(--line);border-radius:99px;padding:4px 12px;cursor:pointer;background:var(--bg)}
+.opts input{accent-color:var(--accent);margin:0}
+.opts label:has(input:checked){border-color:var(--accent);background:var(--accent-soft);font-weight:700}
+.opts label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+textarea{width:100%;min-height:56px;font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg);resize:vertical}
+textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;font-size:.9rem;font-weight:700;padding:9px 16px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--bg);cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+#out{white-space:pre-wrap;font-size:.88rem;background:var(--surface);border:1px dashed var(--accent);border-radius:6px;padding:14px;min-height:60px}
+#toast{font-size:.85rem;color:var(--fact);min-height:1.2em}
+ol.keep{margin:0;padding-left:22px;display:grid;gap:6px}
+.quote{font-family:var(--display);font-size:1.08rem;line-height:1.8;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.src{font-size:.85rem;color:var(--muted)}
+.src a{color:var(--accent);word-break:break-all}
+@media (max-width:640px){
+  .tri,.two{grid-template-columns:1fr}
+  .bar-row{grid-template-columns:72px 1fr}
+}
+@media (prefers-reduced-motion:no-preference){ .bar span{transition:width .6s ease} }
+
+.who{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.84rem;background:var(--bg);border-radius:4px;padding:8px 10px}
+.who b{color:var(--accent)}
+.gap{font-size:.82rem;color:var(--interp);background:var(--interp-soft);border-radius:4px;padding:6px 10px}
+.no{font-size:.75rem;font-weight:700;color:var(--muted)}
+details.bg{border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:12px 16px}
+details.bg summary{cursor:pointer;font-weight:700}
+details.bg section{padding-block:20px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.meta label{display:grid;gap:4px;font-size:.85rem;color:var(--muted)}
+.meta input{font:inherit;font-size:.95rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--fg)}
+.dept-tag{display:inline-block;background:var(--accent);color:var(--bg);font-weight:700;padding:2px 12px;border-radius:99px;font-size:.9rem}
+section.intro{gap:14px}
+.ib{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:grid;gap:8px}
+.ib h2{font-size:1.1rem;margin:0;color:var(--accent)}
+.ib ul,.ib ol{margin:0;padding-left:20px;display:grid;gap:4px;font-size:.95rem}
+@media print{.actions,#toast,details.bg{display:none}.item{break-inside:avoid}}
+
+.netbar{position:sticky;top:0;z-index:5;font-size:.85rem;padding:8px 12px;border-radius:0 0 6px 6px;background:var(--accent-soft);color:var(--fg);display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
+.netbar.err{background:var(--unver-soft);color:var(--unver);font-weight:700}
+.saved{font-size:.8rem;color:var(--muted)}
+.saved.ok{color:var(--fact)} .saved.bad{color:var(--unver);font-weight:700} .saved.busy{color:var(--interp)}
+.writer-box{background:var(--surface);border:2px solid var(--accent);border-radius:6px;padding:14px 16px;display:grid;gap:6px}
+.writer-box input{font:inherit;font-size:1rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg);max-width:260px}
+.locked .opts,.locked textarea{opacity:.45;pointer-events:none}
+.st{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap;border:1px solid var(--line);color:var(--muted)}
+.st.now{background:var(--fact-soft);color:var(--fact);border-color:transparent}
+.st.review{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.st.need{background:var(--unver-soft);color:var(--unver);border-color:transparent}
+.st.na{background:var(--line);color:var(--fg);border-color:transparent}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.dcard{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;display:grid;gap:8px;align-content:start;min-width:0}
+.dcard h3 a{color:var(--fg);text-decoration:none} .dcard h3 a:hover{text-decoration:underline}
+.prog{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.prog span{display:block;height:100%;background:var(--fact)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font-size:.82rem;padding:5px 12px;border-radius:99px;background:transparent;color:var(--accent)}
+.chips button[aria-pressed=true]{background:var(--accent);color:var(--bg)}
+td.nw{white-space:nowrap}
+td.memo{white-space:pre-wrap;font-size:.88rem;min-width:200px}
+.linkrow{display:grid;grid-template-columns:110px 1fr auto;gap:8px;align-items:center;font-size:.88rem;padding:6px 0;border-bottom:1px solid var(--line)}
+.linkrow code{word-break:break-all;font-size:.8rem;color:var(--muted)}
+.linkrow button{padding:5px 12px;font-size:.8rem}
+@media (max-width:640px){.linkrow{grid-template-columns:1fr}}
+@media print{.netbar,.writer-box{display:none}}
+</style>
+<script src="config.js"></script><script src="data.js"></script></head><body>
+<div id="net" class="netbar" role="status"><span id="netmsg">서버에 연결하는 중…</span></div><div class="wrap">
+<header>
+  <p class="eyebrow">창원경일고 · 2028 대입 대응 점검 · 부서별 점검지 04/06</p>
+  <h1><span class="dept-tag">교무기획부</span><br>2028 대입 대응 점검지</h1>
+  <p class="lead">전체 점검표 14개 항목 중 업무분장상 <b>교무기획부</b> 주관 항목 <b>2개</b>입니다. 체크하고 메모를 쓰면 <b>자동 저장</b>되어 교감 총괄표에 바로 반영됩니다. 따로 회신하지 않으셔도 됩니다.</p>
+  <p class="muted" style="font-size:.88rem">책임자: 이미현 부장 · 협조 부서가 적힌 항목은 해당 부서와 확인 후 작성해 주십시오.</p>
+</header>
+<section class="intro">
+  <div class="ib"><h2>왜 점검하나요?</h2>
+    <p>2028 대입부터 대학이 <b>석차등급만이 아니라 성취도(A~E), 과목 선택, 수업 내용(세특)</b>까지 함께 봅니다. 서울대·연세대는 정시에서도 학생부를 평가합니다. 우리 학교의 <b>교육과정 → 수업 → 평가 → 학생부 → 진학</b>이 한 줄로 이어지는지 부서별로 나눠 확인하려는 것입니다.</p></div>
+  <div class="ib"><h2>왜 교무기획부인가요?</h2><p>대학이 읽는 최종 결과물은 <b>학생부</b>입니다. 교육과정·수업·평가가 아무리 좋아도 세특에 드러나지 않으면 평가받지 못하므로, 학생부 총괄 부서의 점검이 필요합니다.</p></div>
+  <div class="ib"><h2>교무기획부가 꼭 알아둘 변화</h2><ul><li>서울대 정시 교과역량평가(40점)와 연세대 정시 서류평가(100점)는 <b>세특에 나타난 학업 수행</b>을 읽습니다.</li><li>기초과목 → 심화과목으로 이어진 ‘과목 위계’는 두 과목 세특이 서로 연결될 때 비로소 증명됩니다.</li><li>단순 참여 기록보다 질문 → 개념 적용 → 자료 분석 → 생각의 변화 → 확장이 보이는 기록이 강합니다.</li></ul></div>
+  <div class="ib"><h2>이렇게 해 주세요</h2>
+    <ol class="steps">
+      <li>아래 <b>작성자 이름</b>을 입력합니다. (한 번 입력하면 이 기기에서 기억합니다)</li>
+      <li>항목마다 <b>현재 상태</b>를 고르고, 메모 칸에 <b>현황·근거 자료·다음 조치</b>를 한두 줄 적습니다. ‘점검 방법’을 참고하세요.</li>
+      <li>끝. 입력하는 즉시 저장되며, 항목 아래 <b>‘저장됨’</b> 표시를 확인하시면 됩니다.</li>
+    </ol>
+    <p class="muted" style="font-size:.88rem">부서원 여러 명이 함께 써도 됩니다. 같은 항목을 동시에 고치면 마지막에 저장한 내용이 남으니, 항목을 나눠 맡아 주세요. 메모에는 과목명·교사 실명 대신 ‘○○과’처럼 적어 주시기 바랍니다. 정답을 맞히는 점검이 아니므로 ‘점검 필요’가 많아도 괜찮습니다.</p></div>
+</section>
+<details class="bg"><summary>배경 자료 더 보기 — 대학별 변화 표, 주의할 해석, 학생 사례</summary><section id="s1">
+  <h2>핵심 요약</h2>
+  <p class="callout">대학들이 고교에서 무엇을 어떻게 배웠는지를 더 세밀하게 평가하기 시작했다. 학교의 경쟁력은 A를 많이 만드는 데서가 아니라, 필요한 과목을 제대로 선택하고 깊이 공부한 성취가 학생부에 남도록 하는 데서 나온다.</p>
+  <div class="tri">
+    <div class="t-fact"><b>확인된 변화</b>
+      <ul><li>서울대 정시 교과역량평가 20 → 40</li><li>연세대 추천형 성취도 점수화 (30%)</li><li>연세대 정시 서류평가 100점 도입</li></ul></div>
+    <div class="t-interp"><b>현장 해석</b>
+      <ul><li>성취도(A~E)가 석차등급과 별도로 점수가 됨</li><li>과목 선택과 위계가 정시에도 영향</li></ul></div>
+    <div class="t-unver"><b>오해하기 쉬운 것</b>
+      <ul><li>“A를 많이 주면 무조건 유리하다”</li><li>“고급과목을 개설하면 평가가 올라간다”</li></ul></div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2>대학은 무엇을 보기 시작했나</h2>
+  <p>축구선수를 뽑을 때 100m 기록만 보던 심사위원이, 이제는 <b>어떤 훈련을 했는지, 어려운 훈련도 해봤는지, 목표를 얼마나 달성했는지, 실제 경기에서 어땠는지</b>까지 보는 것과 같습니다.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>축구 비유</th><th>대입에서 보는 것</th></tr></thead>
+    <tbody>
+      <tr><td>100m 기록</td><td>수능</td></tr>
+      <tr><td>팀 안에서 몇 등</td><td>석차등급</td></tr>
+      <tr><td>목표를 얼마나 달성했는지</td><td>A·B·C·D·E 성취도</td></tr>
+      <tr><td>어떤 훈련을 선택했는지</td><td>과목 선택·과목 위계</td></tr>
+      <tr><td>실제 경기 내용</td><td>세특·수업 활동</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="tbl"><table>
+    <thead><tr><th>대학·전형</th><th>2028 변화</th><th>현장 해석</th><th>확인</th></tr></thead>
+    <tbody>
+      <tr><td><b>서울대 정시 일반</b></td><td>1단계 수능 3배수 → 2단계 수능 60 + 교과역량평가 40 (기존 80:20). 의·수의대는 60+20+면접 20</td><td>정시에서도 과목 이수·성취도·세특을 봄. 단, 40점은 <b>명목 배점</b>이며 실제 영향력은 지원자 간 점수 차이에 달려 있음</td><td><span class="tag fact">확인</span></td></tr>
+      <tr><td><b>연세대 교과 추천형</b></td><td>교과점수 = 석차등급 70% + 성취도 30% (A 30·B 27·C 20·D 10·E 0). 1단계 교과 100% 5배수 → 2단계 교과 80 + 서류 20</td><td>같은 등급이어도 A냐 B냐가 점수 차이로 직결</td><td><span class="tag fact">시행계획</span></td></tr>
+      <tr><td><b>연세대 정시 일반</b></td><td>정량평가 50점 폐지 → 서류평가 100점. 수능 900 + 서류 100 (의예 850+100+면접 50)</td><td>“정시는 수능만”이라는 지도는 점점 위험</td><td><span class="tag fact">시행계획</span></td></tr>
+      <tr><td><b>경희대 네오르네상스 서류형</b></td><td>석차등급 미탑재, 성취도·원점수·과목평균·분포비율로 평가 (학업 40·진로 40·공동체 20)</td><td>교내 석차 외 정보로 학업을 설명</td><td><span class="tag interp">보도 기준</span></td></tr>
+      <tr><td><b>경희대 정시 수능·학생부형</b></td><td>수학·과학 선택과목 권장 이수조건 충족 시 총점 8점 가산</td><td>‘고급’ 과목명에 붙는 점수가 아니라 <b>이수 조건 충족</b> 여부</td><td><span class="tag interp">보도 기준</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted">연세대 계산 예시(설명용): 2등급 환산 63점 가정 시 A면 63+30=93, B면 63+27=90. 등급별 환산점수는 요강에서 다시 확인해야 합니다.</p>
+</section>
+
+<section id="s3">
+  <h2>평가와 과목 편성, 무엇을 볼까</h2>
+  <h3>① 성취도 분할점수 방식</h3>
+  <div class="two">
+    <div class="card"><h3>고정분할점수</h3><p>“90점 이상이면 A”처럼 경계가 미리 정해져 있음. 놀이기구 키 제한 140cm와 같음.</p></div>
+    <div class="card"><h3>추정분할점수</h3><p>문항과 성취수준을 검토해 A·B 경계를 평가 설계 단계에서 정함. 같은 87점이 A 기준 90점이면 B, 85점이면 A가 될 수 있음 (숫자는 예시).</p></div>
+  </div>
+  <p>어떤 방식이 옳다는 정답은 없습니다. 기준은 <b>과목의 성취기준과 문항 수준에 맞는 타당한 방식인가</b>입니다. 방식을 바꾸면 A 비율이 크게 달라질 수 있으므로, 변경 시 교과협의회 근거를 남겨야 합니다.</p>
+
+  <h3>② 심화·고급과목 편성</h3>
+  <div class="two">
+    <div class="card"><h3>기대 효과</h3><ul><li>기초 → 심화로 이어지는 과목 위계를 보여줄 수 있음</li><li>상위권 학생이 학교 안에서 더 깊이 공부할 수 있음</li></ul></div>
+    <div class="card"><h3>점검할 위험</h3><ul><li>기존 실험·탐구 과목을 대체하면 탐구 경험이 줄 수 있음</li><li>강의·문제풀이만 하면 이름만 ‘고급’인 과목이 됨</li><li>수강 인원이 없으면 편성표에만 남음</li></ul></div>
+  </div>
+  <p>이상적인 흐름: <b>일반과목 → 심화과목 → 탐구·프로젝트 → 좋은 성취 → 세특 기록</b></p>
+</section>
+
+<section id="s4">
+  <h2>주의할 해석 네 가지</h2>
+  <div class="two">
+    <div class="card"><h3>40점은 명목 배점이다</h3><p>서울대 정시의 교과역량평가 40점이 “합격의 40%가 내신”이라는 뜻은 아닙니다. 실제 영향력은 지원자 간 교과역량평가 점수 차이와 수능 점수 차이를 함께 봐야 합니다.</p></div>
+    <div class="card"><h3>A가 많으면 무조건 유리한가</h3><p>정량평가(연세대 추천형)에서는 유리합니다. 정성평가(서울대, 학종)는 원점수·평균·분포를 함께 보므로 “이 학교의 A는 어떤 의미인가”로 다시 읽힙니다.</p></div>
+    <div class="card"><h3>A 비율 변화 = 실력 변화가 아니다</h3><p>A 비율은 시험 난도, 점수분포, 학생집단, 분할점수 방식의 영향을 모두 받습니다. 평균이 비슷한데 A 비율만 크게 바뀌었다면 평가방식부터 확인해야 합니다.</p></div>
+    <div class="card"><h3>‘고급’이라는 이름에 점수가 붙지 않는다</h3><p>경희대 정시 가점은 정해진 수학·과학 이수 조건 충족 여부를 봅니다. 과목명보다 이수 조건과 실제 수업 깊이가 중요합니다.</p></div>
+  </div>
+</section>
+
+<section id="s5">
+  <h2>학생 사례: 기계공학 희망 두 학생</h2>
+  <div class="two">
+    <div class="card"><h3>A학생 · 내신 1.5</h3><ul><li>어려운 수학·과학 과목 회피</li><li>성취도 B 여러 개</li><li>세특은 단순 참여 기록</li></ul></div>
+    <div class="card"><h3>B학생 · 내신 1.7</h3><ul><li>미적분·물리 관련 과목 적극 선택</li><li>대부분 A</li><li>물리 수업에서 기계 관련 탐구, 문제해결 과정이 세특에 기록</li></ul></div>
+  </div>
+  <p>평균등급만 보면 A학생이 앞서 보이지만, 과목 선택·성취도·세특을 함께 보는 대학에서는 B학생을 1.7이라는 숫자만으로 낮게 평가하기 어렵습니다. 그렇다고 1.7이 1.5보다 무조건 유리하다는 뜻은 아닙니다. 성적은 여전히 중요합니다.</p>
+  <p><b>과목 위계</b>는 앞에서 배운 것을 다음 단계에서 더 깊게 공부하는 흐름입니다. 예: 대수 → 미적분Ⅰ → 미적분Ⅱ, 통합과학 → 물리학 → 전공연계 심화.</p>
+</section>
+</details>
+<section id="check">
+  <h2>점검 항목</h2>
+  <label class="writer-box">작성자 이름 (필수)<input id="writer" maxlength="20" placeholder="예: 홍길동" autocomplete="name"></label>
+  <div class="summary" aria-live="polite">
+    <div><b id="c-now">0</b><small>이미 운영 중</small></div><div><b id="c-review">0</b><small>적용 검토</small></div>
+    <div><b id="c-need">0</b><small>점검 필요</small></div><div><b id="c-none">0</b><small>미선택</small></div>
+  </div>
+  <div id="areas" class="area" style="gap:16px"></div>
+  <div class="actions"><button type="button" class="ghost" id="print">인쇄</button></div>
+</section>
+</div>
+<script>const SLUG = "records";
+const STATES = [["now","이미 운영 중"],["review","적용 검토"],["need","점검 필요"],["na","해당 없음"]];
+const LBL = Object.fromEntries(STATES);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const net = (msg, err) => { const n=document.getElementById("net"); n.className = "netbar"+(err?" err":""); document.getElementById("netmsg").textContent = msg; };
+function apiOK(){ if(!window.API_URL){ net("설정 필요: config.js에 Apps Script 웹앱 주소가 비어 있습니다. 교감에게 알려 주세요.", true); return false; } return true; }
+async function toJson(r){
+  const t = await r.text();
+  try { return JSON.parse(t); } catch(e){ throw new Error("서버 응답이 올바르지 않습니다. 웹앱 배포의 액세스 권한이 '모든 사용자'인지, config.js 주소가 /exec로 끝나는지 확인해 주세요."); }
+}
+async function apiGet(){
+  const r = await fetch(API_URL + (API_URL.includes("?")?"&":"?") + "t=" + Date.now());
+  const j = await toJson(r); if(!j.ok) throw new Error(j.error||"조회 실패"); return j;
+}
+async function apiPost(body){
+  const r = await fetch(API_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(body)});
+  const j = await toJson(r); if(!j.ok) throw new Error(j.error||"저장 실패"); return j;
+}
+
+const D = CHECK.depts.find(d=>d.slug===SLUG);
+const ITEMS = CHECK.items.filter(i=>i.dept===SLUG);
+const WKEY = "k2028-writer";
+const wInp = document.getElementById("writer");
+try { wInp.value = localStorage.getItem(WKEY) || ""; } catch(e){}
+const root = document.getElementById("areas");
+const state = {};      // id -> {s,m} 화면 값
+const dirty = {};      // id -> {s:true, m:true} 아직 서버에 안 보낸 칸
+const inflight = {};   // id -> true 전송 중
+const timers = {};     // 메모 자동저장 대기
+function writer(){ return wInp.value.trim(); }
+function lock(){
+  const off = !writer();
+  document.body.classList.toggle("locked", off);
+  document.querySelectorAll("#areas input, #areas textarea").forEach(x=>x.disabled = off);
+}
+wInp.addEventListener("input", ()=>{ try{localStorage.setItem(WKEY, wInp.value.trim());}catch(e){} lock(); });
+const $sv = id => document.querySelector(`#it-${id} .saved`);
+function mark(id, cls, txt){ const s=$sv(id); s.className = "saved"+(cls?" "+cls:""); s.textContent = txt; }
+
+ITEMS.forEach(it=>{
+  state[it.id] = {s:"", m:""};
+  const el = document.createElement("div"); el.className="item"; el.id="it-"+it.id;
+  el.innerHTML = `<span class="no">점검 ${it.no}번 · ${it.step} ${it.area}</span>
+    <p class="q">${it.q}</p><p class="why">${it.why}</p>
+    <div class="who"><span><b>담당</b> ${it.who}</span><span><b>근거</b> ${it.basis}</span><span><b>협조</b> ${it.coop}</span></div>
+    <p class="why"><b>점검 방법</b> ${it.how}</p>
+    ${it.gap ? `<p class="gap">※ ${it.gap}</p>` : ""}
+    <div class="opts" role="radiogroup" aria-label="상태 선택">${STATES.map(([v,l])=>`<label><input type="radio" name="${it.id}" value="${v}">${l}</label>`).join("")}</div>
+    <textarea maxlength="1000" placeholder="우리 학교 현황 · 근거 자료 · 다음 조치(누가/언제까지)"></textarea>
+    <p class="saved" aria-live="polite">불러오는 중…</p>`;
+  const ta = el.querySelector("textarea");
+  el.querySelectorAll("input").forEach(r=>r.addEventListener("change",()=>{
+    state[it.id].s = r.value; el.dataset.s = r.value; count();
+    (dirty[it.id] = dirty[it.id] || {}).s = true; flush(it.id);
+  }));
+  ta.addEventListener("input",()=>{
+    state[it.id].m = ta.value; (dirty[it.id] = dirty[it.id] || {}).m = true;
+    mark(it.id, "busy", "입력 중… (멈추면 자동 저장)");
+    clearTimeout(timers[it.id]); timers[it.id] = setTimeout(()=>{ delete timers[it.id]; flush(it.id); }, 1500);
+  });
+  ta.addEventListener("blur",()=>{ if(timers[it.id]){ clearTimeout(timers[it.id]); delete timers[it.id]; flush(it.id); } });
+  root.appendChild(el);
+});
+lock();
+
+function bodyFor(id){
+  const f = dirty[id] || {}, b = {dept:SLUG, item:id, w:writer()};
+  if(f.s) b.s = state[id].s;
+  if(f.m) b.m = state[id].m;
+  return b;
+}
+async function flush(id){
+  if(inflight[id] || !dirty[id]) return;          // 전송 중이면 끝난 뒤 다시 보냄(순서 보장)
+  if(!writer()){ mark(id, "bad", "작성자 이름을 먼저 입력해 주세요."); wInp.focus(); return; }
+  if(!apiOK()) return;
+  const body = bodyFor(id); delete dirty[id]; inflight[id] = true;
+  mark(id, "busy", "저장 중…");
+  try{
+    const j = await apiPost(body);
+    mark(id, "ok", `저장됨 · ${body.w} · ${j.t}`);
+    net("자동 저장 중입니다. 입력하면 교감 총괄표에 바로 반영됩니다.");
+  }catch(e){
+    const f = dirty[id] = dirty[id] || {};      // 실패한 칸은 다시 보낼 목록에 되돌림
+    if("s" in body) f.s = true; if("m" in body) f.m = true;
+    mark(id, "bad", "저장 실패: "+e.message+" — 5초 뒤 다시 시도합니다.");
+    net("저장에 실패했습니다. 인터넷 연결을 확인해 주세요.", true);
+    setTimeout(()=>flush(id), 5000);
+  }finally{
+    inflight[id] = false;
+    if(dirty[id] && !timers[id]) flush(id);
+  }
+}
+function pending(){ return ITEMS.some(it=>dirty[it.id] || inflight[it.id] || timers[it.id]); }
+// 창을 닫을 때 남은 입력은 비콘으로 마지막 전송
+window.addEventListener("pagehide", ()=>{
+  if(!window.API_URL || !writer() || !navigator.sendBeacon) return;
+  ITEMS.forEach(it=>{
+    if(timers[it.id] || dirty[it.id]){
+      navigator.sendBeacon(API_URL, new Blob([JSON.stringify(bodyFor(it.id))], {type:"text/plain;charset=utf-8"}));
+    }
+  });
+});
+window.addEventListener("beforeunload", e=>{ if(pending()){ e.preventDefault(); e.returnValue = ""; } });
+
+function count(){
+  const c = {now:0,review:0,need:0,none:0};
+  ITEMS.forEach(it=>{ const s=state[it.id].s; if(s in c) c[s]++; else if(!s) c.none++; });
+  for(const k in c) document.getElementById("c-"+k).textContent = c[k];
+}
+function apply(it, d, first){
+  const el = document.getElementById("it-"+it.id), ta = el.querySelector("textarea");
+  // 지금 고치고 있는 항목은 건드리지 않음
+  if(!first && (dirty[it.id] || inflight[it.id] || timers[it.id] || document.activeElement===ta)) return;
+  const changed = !first && d && (d.s !== state[it.id].s || d.m !== state[it.id].m);
+  state[it.id] = {s:(d&&d.s)||"", m:(d&&d.m)||""};
+  el.dataset.s = state[it.id].s; ta.value = state[it.id].m;
+  el.querySelectorAll("input").forEach(r=>r.checked = r.value===state[it.id].s);
+  if(d) mark(it.id, changed?"busy":"", `${changed?"새 내용 반영됨 · ":""}마지막 저장: ${d.w} · ${d.t}`);
+  else if(first) mark(it.id, "", "아직 저장된 내용이 없습니다.");
+}
+async function load(first){
+  count();
+  if(!apiOK()){ document.querySelectorAll(".saved").forEach(s=>s.textContent=""); return; }
+  try{
+    const j = await apiGet();
+    ITEMS.forEach(it=>apply(it, j.data[it.id], first));
+    count();
+    if(first) net("연결됨 · 선택하거나 메모를 쓰면 자동 저장되어 교감 총괄표에 바로 반영됩니다.");
+  }catch(e){ if(first) net("서버에서 불러오지 못했습니다: "+e.message, true); }
+}
+document.getElementById("print").addEventListener("click",()=>window.print());
+load(true);
+setInterval(()=>{ if(!document.hidden) load(false); }, 30000);   // 같은 부서 다른 선생님 입력 반영
+</script></body></html>

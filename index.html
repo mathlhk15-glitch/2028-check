@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>2028 대입 점검 · 교감 총괄표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>/* Layout: 협의회 자료 한 장처럼 읽히는 단일 컬럼 + 마지막에 조작하는 점검표 */
+:root{
+  --bg:#f5f7fa; --surface:#ffffff; --fg:#1b2533; --muted:#5b6778; --line:#d9dfe8;
+  --accent:#1f4e8c; --accent-soft:#e3ecf8;
+  --fact:#1d7a52; --fact-soft:#e2f3ea;
+  --interp:#9a6a12; --interp-soft:#faf0db;
+  --unver:#a33a3a; --unver-soft:#f8e3e3;
+  --display:"Gowun Batang", "Noto Serif KR", "Apple SD Gothic Neo", serif;
+  --body:"IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#11161e; --surface:#19202b; --fg:#e4e9f1; --muted:#9aa6b8; --line:#2c3644;
+    --accent:#7fa9e6; --accent-soft:#1f2c40;
+    --fact:#6cc79c; --fact-soft:#16302a; --interp:#e0b25e; --interp-soft:#352b18;
+    --unver:#ec8b8b; --unver-soft:#3a1f22; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11161e; --surface:#19202b; --fg:#e4e9f1; --muted:#9aa6b8; --line:#2c3644;
+  --accent:#7fa9e6; --accent-soft:#1f2c40;
+  --fact:#6cc79c; --fact-soft:#16302a; --interp:#e0b25e; --interp-soft:#352b18;
+  --unver:#ec8b8b; --unver-soft:#3a1f22; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:32px 64px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.35;margin:0}
+h1{font-size:clamp(1.6rem,4.5vw,2.3rem)}
+h2{font-size:1.4rem;margin-bottom:12px}
+h3{font-size:1.1rem}
+p{margin:0}
+.eyebrow{font-size:.78rem;letter-spacing:.08em;color:var(--muted);font-weight:500}
+header{display:grid;gap:12px;padding-bottom:24px;border-bottom:2px solid var(--fg)}
+.lead{font-size:1.08rem;color:var(--fg);max-width:65ch}
+.toc{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.9rem}
+.toc a{color:var(--accent);text-decoration:none}
+.toc a:hover,.toc a:focus-visible{text-decoration:underline}
+section{padding-block:36px;border-bottom:1px solid var(--line);display:grid;gap:16px}
+section > p{max-width:68ch}
+.muted{color:var(--muted)}
+.callout{background:var(--accent-soft);border-left:4px solid var(--accent);padding:16px 18px;border-radius:4px;font-weight:500}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tri > div{padding:16px;border-radius:6px;display:grid;gap:6px;align-content:start;min-width:0}
+.t-fact{background:var(--fact-soft)} .t-fact b{color:var(--fact)}
+.t-interp{background:var(--interp-soft)} .t-interp b{color:var(--interp)}
+.t-unver{background:var(--unver-soft)} .t-unver b{color:var(--unver)}
+.tri ul{margin:0;padding-left:18px;font-size:.93rem}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.93rem;min-width:520px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;background:var(--accent-soft);font-size:.85rem}
+tr:last-child td{border-bottom:0}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.tag.fact{background:var(--fact-soft);color:var(--fact)}
+.tag.interp{background:var(--interp-soft);color:var(--interp)}
+.tag.unver{background:var(--unver-soft);color:var(--unver)}
+.bars{display:grid;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px}
+.bar-row{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center}
+.bar-row .lbl{font-size:.88rem;font-weight:500}
+.bar-pair{display:grid;gap:4px}
+.bar{height:16px;border-radius:3px;position:relative;background:var(--line)}
+.bar span{position:absolute;inset:0 auto 0 0;border-radius:3px}
+.bar.y25 span{background:var(--muted)}
+.bar.y26 span{background:var(--accent)}
+.bar i{position:absolute;right:6px;top:-1px;font-style:normal;font-size:.72rem;font-variant-numeric:tabular-nums;color:var(--fg)}
+.legend{display:flex;gap:16px;font-size:.82rem;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend .l25::before{background:var(--muted)} .legend .l26::before{background:var(--accent)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.card ul{margin:0;padding-left:18px;font-size:.93rem}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:700;font-size:.95rem}
+.flow span{background:var(--surface);border:1px solid var(--accent);color:var(--accent);padding:4px 12px;border-radius:99px}
+.flow em{font-style:normal;color:var(--muted)}
+/* 점검표 */
+.summary{display:flex;flex-wrap:wrap;gap:10px}
+.summary div{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-width:120px}
+.summary b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums;font-family:var(--display)}
+.summary small{color:var(--muted);font-size:.8rem}
+.area{display:grid;gap:10px}
+.area-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.area-head .step{font-size:.8rem;font-weight:700;color:var(--accent)}
+.item{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:10px}
+.item[data-s="now"]{border-left-color:var(--fact)}
+.item[data-s="review"]{border-left-color:var(--accent)}
+.item[data-s="need"]{border-left-color:var(--unver)}
+.item[data-s="na"]{opacity:.65}
+.item p.q{font-weight:500}
+.item .why{font-size:.86rem;color:var(--muted)}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts label{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;border:1px solid var(--line);border-radius:99px;padding:4px 12px;cursor:pointer;background:var(--bg)}
+.opts input{accent-color:var(--accent);margin:0}
+.opts label:has(input:checked){border-color:var(--accent);background:var(--accent-soft);font-weight:700}
+.opts label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+textarea{width:100%;min-height:56px;font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg);resize:vertical}
+textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;font-size:.9rem;font-weight:700;padding:9px 16px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--bg);cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+#out{white-space:pre-wrap;font-size:.88rem;background:var(--surface);border:1px dashed var(--accent);border-radius:6px;padding:14px;min-height:60px}
+#toast{font-size:.85rem;color:var(--fact);min-height:1.2em}
+ol.keep{margin:0;padding-left:22px;display:grid;gap:6px}
+.quote{font-family:var(--display);font-size:1.08rem;line-height:1.8;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.src{font-size:.85rem;color:var(--muted)}
+.src a{color:var(--accent);word-break:break-all}
+@media (max-width:640px){
+  .tri,.two{grid-template-columns:1fr}
+  .bar-row{grid-template-columns:72px 1fr}
+}
+@media (prefers-reduced-motion:no-preference){ .bar span{transition:width .6s ease} }
+
+.who{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.84rem;background:var(--bg);border-radius:4px;padding:8px 10px}
+.who b{color:var(--accent)}
+.gap{font-size:.82rem;color:var(--interp);background:var(--interp-soft);border-radius:4px;padding:6px 10px}
+.no{font-size:.75rem;font-weight:700;color:var(--muted)}
+details.bg{border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:12px 16px}
+details.bg summary{cursor:pointer;font-weight:700}
+details.bg section{padding-block:20px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.meta label{display:grid;gap:4px;font-size:.85rem;color:var(--muted)}
+.meta input{font:inherit;font-size:.95rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--fg)}
+.dept-tag{display:inline-block;background:var(--accent);color:var(--bg);font-weight:700;padding:2px 12px;border-radius:99px;font-size:.9rem}
+section.intro{gap:14px}
+.ib{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:grid;gap:8px}
+.ib h2{font-size:1.1rem;margin:0;color:var(--accent)}
+.ib ul,.ib ol{margin:0;padding-left:20px;display:grid;gap:4px;font-size:.95rem}
+@media print{.actions,#toast,details.bg{display:none}.item{break-inside:avoid}}
+
+.netbar{position:sticky;top:0;z-index:5;font-size:.85rem;padding:8px 12px;border-radius:0 0 6px 6px;background:var(--accent-soft);color:var(--fg);display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
+.netbar.err{background:var(--unver-soft);color:var(--unver);font-weight:700}
+.saved{font-size:.8rem;color:var(--muted)}
+.saved.ok{color:var(--fact)} .saved.bad{color:var(--unver);font-weight:700} .saved.busy{color:var(--interp)}
+.writer-box{background:var(--surface);border:2px solid var(--accent);border-radius:6px;padding:14px 16px;display:grid;gap:6px}
+.writer-box input{font:inherit;font-size:1rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg);max-width:260px}
+.locked .opts,.locked textarea{opacity:.45;pointer-events:none}
+.st{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap;border:1px solid var(--line);color:var(--muted)}
+.st.now{background:var(--fact-soft);color:var(--fact);border-color:transparent}
+.st.review{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.st.need{background:var(--unver-soft);color:var(--unver);border-color:transparent}
+.st.na{background:var(--line);color:var(--fg);border-color:transparent}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.dcard{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;display:grid;gap:8px;align-content:start;min-width:0}
+.dcard h3 a{color:var(--fg);text-decoration:none} .dcard h3 a:hover{text-decoration:underline}
+.prog{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.prog span{display:block;height:100%;background:var(--fact)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font-size:.82rem;padding:5px 12px;border-radius:99px;background:transparent;color:var(--accent)}
+.chips button[aria-pressed=true]{background:var(--accent);color:var(--bg)}
+td.nw{white-space:nowrap}
+td.memo{white-space:pre-wrap;font-size:.88rem;min-width:200px}
+.linkrow{display:grid;grid-template-columns:110px 1fr auto;gap:8px;align-items:center;font-size:.88rem;padding:6px 0;border-bottom:1px solid var(--line)}
+.linkrow code{word-break:break-all;font-size:.8rem;color:var(--muted)}
+.linkrow button{padding:5px 12px;font-size:.8rem}
+@media (max-width:640px){.linkrow{grid-template-columns:1fr}}
+@media print{.netbar,.writer-box{display:none}}
+</style>
+<script src="config.js"></script><script src="data.js"></script></head><body>
+<div id="net" class="netbar" role="status"><span id="netmsg">서버에 연결하는 중…</span></div><div class="wrap">
+<header>
+  <p class="eyebrow">창원경일고 · 교감 총괄용 · 2026학년도 업무분장 기준</p>
+  <h1>2028 대입 대응 점검 — 실시간 총괄표</h1>
+  <p class="lead">원본 점검표 <b>14개 항목 전부</b>를 <b>6개 부서</b>가 나눠 맡았습니다. 부서가 점검지에 입력하면 이 화면에 바로 나타납니다.</p>
+  <div class="actions"><button type="button" id="reload">지금 새로고침</button></div>
+</header>
+<section>
+  <h2>부서별 진행 현황</h2>
+  <div class="summary" aria-live="polite">
+    <div><b id="t-now">0</b><small>이미 운영 중</small></div><div><b id="t-review">0</b><small>적용 검토</small></div>
+    <div><b id="t-need">0</b><small>점검 필요</small></div><div><b id="t-none">0</b><small>미응답</small></div>
+  </div>
+  <div id="dgrid" class="dgrid"></div>
+</section>
+<section>
+  <h2>항목별 응답</h2>
+  <div class="chips" id="filters">
+    <button type="button" class="ghost" data-f="all" aria-pressed="true">전체</button>
+    <button type="button" class="ghost" data-f="need" aria-pressed="false">점검 필요</button>
+    <button type="button" class="ghost" data-f="review" aria-pressed="false">적용 검토</button>
+    <button type="button" class="ghost" data-f="now" aria-pressed="false">이미 운영 중</button>
+    <button type="button" class="ghost" data-f="none" aria-pressed="false">미응답</button>
+  </div>
+  <div class="tbl"><table style="min-width:760px"><thead><tr><th>No</th><th>영역</th><th>점검 항목</th><th>주관</th><th>상태</th><th>메모</th><th>작성</th></tr></thead><tbody id="tbody"></tbody></table></div>
+</section>
+<section>
+  <h2>협의 안건 문안</h2>
+  <p>‘점검 필요’와 ‘적용 검토’ 항목을 부서 메모와 함께 정리합니다.</p>
+  <div class="actions"><button type="button" id="gen">문안 만들기</button><button type="button" class="ghost" id="copyout">문안 복사</button></div>
+  <div id="out">버튼을 누르면 현재 응답 기준으로 문안이 만들어집니다.</div>
+</section>
+<section style="border-bottom:0">
+  <h2>부서에 보낼 주소</h2>
+  <div class="meta"><label>회신 기한 (전달 문구에 들어감)<input id="due" placeholder="예: 10월 16일(금)"></label></div>
+  <div id="links"></div>
+  <p class="muted" style="font-size:.85rem">배정 판단이 들어간 항목: 5번(수업 실행은 교과 몫, 교수학습지원부는 취합), 7번(학교알리미 비교는 명시 담당 없음 → 학력평가부), 12번(과목 선택 상담 명시 담당 없음 → 진로부 주관·교육과정부 협조).</p>
+</section>
+</div>
+<script>
+const STATES = [["now","이미 운영 중"],["review","적용 검토"],["need","점검 필요"],["na","해당 없음"]];
+const LBL = Object.fromEntries(STATES);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const net = (msg, err) => { const n=document.getElementById("net"); n.className = "netbar"+(err?" err":""); document.getElementById("netmsg").textContent = msg; };
+function apiOK(){ if(!window.API_URL){ net("설정 필요: config.js에 Apps Script 웹앱 주소가 비어 있습니다. 교감에게 알려 주세요.", true); return false; } return true; }
+async function toJson(r){
+  const t = await r.text();
+  try { return JSON.parse(t); } catch(e){ throw new Error("서버 응답이 올바르지 않습니다. 웹앱 배포의 액세스 권한이 '모든 사용자'인지, config.js 주소가 /exec로 끝나는지 확인해 주세요."); }
+}
+async function apiGet(){
+  const r = await fetch(API_URL + (API_URL.includes("?")?"&":"?") + "t=" + Date.now());
+  const j = await toJson(r); if(!j.ok) throw new Error(j.error||"조회 실패"); return j;
+}
+async function apiPost(body){
+  const r = await fetch(API_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(body)});
+  const j = await toJson(r); if(!j.ok) throw new Error(j.error||"저장 실패"); return j;
+}
+document.getElementById('due').addEventListener('input', renderLinks);
+let DATA = {}, FILTER = "all";
+const base = location.href.replace(/[^/]*([?#].*)?$/, "");
+function render(){
+  // 부서 카드
+  document.getElementById("dgrid").innerHTML = CHECK.depts.map(d=>{
+    const its = CHECK.items.filter(i=>i.dept===d.slug);
+    const c = {now:0,review:0,need:0,na:0}; let done=0, last="";
+    its.forEach(i=>{ const x=DATA[i.id]; if(x&&x.s){ c[x.s]++; done++; } if(x&&x.t>last) last=x.t; });
+    const pct = Math.round(done/its.length*100);
+    return `<div class="dcard"><h3><a href="${d.slug}.html" target="_blank" rel="noopener">${d.name}</a></h3>
+      <p class="muted" style="font-size:.85rem">${d.head} · ${its.map(i=>i.no).join("·")}번</p>
+      <div class="prog" aria-label="진행률 ${pct}%"><span style="width:${pct}%"></span></div>
+      <p style="font-size:.88rem"><b>${done}/${its.length}</b> 응답 ${done===its.length?"✓ 완료":""}</p>
+      <div class="chips" style="gap:4px">${STATES.map(([k,l])=>c[k]?`<span class="st ${k}">${l} ${c[k]}</span>`:"").join("")}</div>
+      <p class="muted" style="font-size:.8rem">${last?"마지막 입력 "+last:"아직 입력 없음"}</p></div>`;
+  }).join("");
+  // 전체 집계
+  const t = {now:0,review:0,need:0,na:0,none:0};
+  CHECK.items.forEach(i=>{ const s=(DATA[i.id]||{}).s; if(s) t[s]++; else t.none++; });
+  ["now","review","need","none"].forEach(k=>document.getElementById("t-"+k).textContent=t[k]);
+  // 항목 표
+  const rows = CHECK.items.filter(i=>{
+    const s=(DATA[i.id]||{}).s||"";
+    return FILTER==="all" || (FILTER==="none" ? !s : s===FILTER);
+  }).map(i=>{
+    const x = DATA[i.id]||{}; const dn = CHECK.depts.find(d=>d.slug===i.dept).name;
+    return `<tr><td class="num">${i.no}</td><td class="nw">${i.area}</td><td style="min-width:260px">${esc(i.q)}</td><td class="nw"><b>${dn}</b></td>
+      <td>${x.s?`<span class="st ${x.s}">${LBL[x.s]}</span>`:`<span class="st">미응답</span>`}</td>
+      <td class="memo">${esc(x.m)}</td><td style="font-size:.8rem;white-space:nowrap">${x.w?esc(x.w)+"<br>"+esc(x.t):""}</td></tr>`;
+  });
+  document.getElementById("tbody").innerHTML = rows.join("") || `<tr><td colspan="7" class="muted">해당하는 항목이 없습니다.</td></tr>`;
+}
+async function refresh(){
+  if(!apiOK()) { render(); return; }
+  try{ const j = await apiGet(); DATA = j.data; render(); net(`연결됨 · ${j.now} 기준 · 30초마다 자동 새로고침 · 누적 저장 ${j.rows}건`); }
+  catch(e){ net("불러오기 실패: "+e.message, true); }
+}
+document.querySelectorAll("#filters button").forEach(bt=>bt.addEventListener("click",()=>{
+  FILTER = bt.dataset.f; document.querySelectorAll("#filters button").forEach(x=>x.setAttribute("aria-pressed", x===bt)); render();
+}));
+document.getElementById("reload").addEventListener("click", refresh);
+setInterval(()=>{ if(!document.hidden) refresh(); }, 30000);
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) refresh(); });
+
+// 부서 주소 목록 + 전달 문구
+const due = document.getElementById("due");
+function msgFor(d){
+  return `[2028 대입 대응 점검 요청] ${d.name}\n2028 대입 변화에 맞춰 우리 학교 교육과정–수업–평가–학생부–진학 연계를 부서별로 점검합니다.\n아래 주소에서 작성자 이름을 넣고 항목별 상태와 메모를 입력해 주세요. 입력 즉시 자동 저장되며 따로 회신하실 필요는 없습니다.\n${base}${d.slug}.html\n기한: ${due.value||"○월 ○일"}까지`;
+}
+function renderLinks(){
+  document.getElementById("links").innerHTML = CHECK.depts.map(d=>`<div class="linkrow"><b>${d.name}</b><code>${base}${d.slug}.html</code><button type="button" class="ghost" data-s="${d.slug}">전달 문구 복사</button></div>`).join("");
+  document.querySelectorAll("#links button").forEach(bt=>bt.addEventListener("click",()=>copy(msgFor(CHECK.depts.find(d=>d.slug===bt.dataset.s)), bt)));
+}
+renderLinks();
+function copy(text, bt){
+  const done = ()=>{ const o=bt.textContent; bt.textContent="복사됨"; setTimeout(()=>bt.textContent=o,1500); };
+  navigator.clipboard.writeText(text).then(done).catch(()=>{ prompt("아래 내용을 복사하세요", text); });
+}
+// 협의 안건 문안
+document.getElementById("gen").addEventListener("click",()=>{
+  const lines = ["[협의 안건] 2028 대입 변화 대응: 교육과정–수업–평가–학생부–진학 연계 점검",""];
+  [["need","■ 점검 필요"],["review","■ 적용 검토"]].forEach(([s,title])=>{
+    const rows = CHECK.items.filter(i=>(DATA[i.id]||{}).s===s).map(i=>{
+      const x=DATA[i.id]; const dn=CHECK.depts.find(d=>d.slug===i.dept).name;
+      return `- ${i.no}. (${i.area}·${dn}) ${i.q}${x.m&&x.m.trim()?"\n  → "+x.m.trim().replace(/\n+/g," / "):""}`;
+    });
+    if(rows.length) lines.push(title, ...rows, "");
+  });
+  const none = CHECK.items.filter(i=>!(DATA[i.id]||{}).s).map(i=>i.no);
+  if(none.length) lines.push(`※ 미응답 항목: ${none.join(", ")}번`, "");
+  lines.push("※ 원칙: A 비율을 늘리는 것이 아니라 성취도를 타당하게 측정하고, 과목 선택–수업–세특을 연결한다");
+  document.getElementById("out").textContent = lines.join("\n");
+});
+document.getElementById("copyout").addEventListener("click",e=>copy(document.getElementById("out").textContent, e.target));
+refresh();
+</script></body></html>
