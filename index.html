@@ -158,7 +158,7 @@ section.intro{gap:14px}
 td.nw{white-space:nowrap}
 td.memo{white-space:pre-wrap;font-size:.88rem;min-width:200px}
 .linkrow{display:grid;grid-template-columns:110px 1fr auto;gap:8px;align-items:center;font-size:.88rem;padding:6px 0;border-bottom:1px solid var(--line)}
-.linkrow code{word-break:break-all;font-size:.8rem;color:var(--muted)}
+.linkrow a{word-break:break-all;font-size:.82rem;color:var(--accent)}
 .linkrow button{padding:5px 12px;font-size:.8rem}
 @media (max-width:640px){.linkrow{grid-template-columns:1fr}}
 @media print{.netbar,.writer-box{display:none}}
@@ -272,7 +272,7 @@ function msgFor(d){
   return `[2028 대입 대응 점검 요청] ${d.name}\n2028 대입 변화에 맞춰 우리 학교 교육과정–수업–평가–학생부–진학 연계를 부서별로 점검합니다.\n아래 주소에서 작성자 이름을 넣고 항목별 상태와 메모를 입력해 주세요. 입력 즉시 자동 저장되며 따로 회신하실 필요는 없습니다.\n${base}${d.slug}.html\n기한: ${due.value||"○월 ○일"}까지`;
 }
 function renderLinks(){
-  document.getElementById("links").innerHTML = CHECK.depts.map(d=>`<div class="linkrow"><b>${d.name}</b><code>${base}${d.slug}.html</code><button type="button" class="ghost" data-s="${d.slug}">전달 문구 복사</button></div>`).join("");
+  document.getElementById("links").innerHTML = CHECK.depts.map(d=>`<div class="linkrow"><b>${d.name}</b><a href="${d.slug}.html" target="_blank" rel="noopener">${base}${d.slug}.html</a><button type="button" class="ghost" data-s="${d.slug}">전달 문구 복사</button></div>`).join("");
   document.querySelectorAll("#links button").forEach(bt=>bt.addEventListener("click",()=>copy(msgFor(CHECK.depts.find(d=>d.slug===bt.dataset.s)), bt)));
 }
 renderLinks();
